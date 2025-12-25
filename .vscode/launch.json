@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Midway Debug",
+      "type": "node",
+      "request": "launch",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${file}",
+      "autoAttachChildProcesses": true,
+      "console": "integratedTerminal",
+      "env": {
+        "NODE_ENV": "local"
+      },
+      "restart": true,
+      "runtimeArgs": ["run", "debug", "code"],
+      "runtimeExecutable": "npm"
+    }
+  ]
+}
