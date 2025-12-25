@@ -29,6 +29,7 @@ export class Database {
         underscored: true,
       },
       dialectOptions: {},
+      logging: false,
     });
   }
 
