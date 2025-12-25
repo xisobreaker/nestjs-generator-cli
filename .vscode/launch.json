@@ -10,7 +10,7 @@
       "autoAttachChildProcesses": true,
       "console": "integratedTerminal",
       "env": {
-        "NODE_ENV": "local"
+        "NODE_ENV": "development"
       },
       "restart": true,
       "runtimeArgs": ["run", "debug", "code"],
