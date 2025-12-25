@@ -4,3 +4,6 @@ dist
 
 # database
 database
+
+# project
+app/src/

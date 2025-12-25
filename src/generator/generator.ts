@@ -5,8 +5,10 @@ import { initKeyColumnUsageModel } from "./models/key-column-usage.model";
 import { initReferentialConstraintsModel } from "./models/referential-constraints.model";
 import { initTablesModel, TablesModel } from "./models/table.model";
 import { existsSync, readFileSync } from "fs";
-import { checkboxPrompt } from "../common/cli-utils";
+import { checkboxPrompt } from "../common/prompt-utils";
 import { Op } from "sequelize";
+import { getCodeGenerators, GeneratorInfo } from "./generators/generator-tools";
+import { queryTables, TableInfo } from "./table-query";
 
 /**
  * 获取数据库配置
@@ -31,7 +33,7 @@ function getDBConfig(): DatabaseConfig {
     username: config[env].username,
     password: config[env].password,
     host: config[env].host,
-    port: config[env].port,
+    port: config[env]?.port || 3306,
     database: config[env].database,
     dialect: config[env].dialect,
   };
@@ -62,20 +64,11 @@ const choiceTables = async (tableSchema: string) => {
  * 选择要生成的代码类型
  */
 const choiceTemplates = async () => {
-  return await checkboxPrompt('请选择要生成的代码类型', [
-    {
-      key: 'entity',
-      value: 'entity',
-    },
-    {
-      key: 'service',
-      value: 'service',
-    },
-    {
-      key: 'controller',
-      value: 'controller',
-    },
-  ]);
+  const codeGenerators = getCodeGenerators();
+  return await checkboxPrompt('请选择要生成的代码类型', codeGenerators.map((generator) => ({
+    key: generator.name,
+    value: generator,
+  }))).then((ret) => ret.map((o) => o.value));
 }
 
 export const generateCode = async () => {
@@ -91,7 +84,22 @@ export const generateCode = async () => {
 
   // 选择数据库表
   const tables = await choiceTables(dbconfig.database);
+
+  // 选择要生成的代码类型
   const templates = await choiceTemplates();
+
+  // 查询数据库表信息
+  const tableInfos = await Promise.all(tables.map((table) => {
+    console.log(`查询数据库表信息: ${table.tableName}`);
+    return queryTables(sequelize, table.tableName);
+  }));
+
+  // 生成代码
+  templates.forEach((template: GeneratorInfo) => {
+    tableInfos.forEach((tableInfo: TableInfo) => {
+      template.generator.generate(tableInfo, template.outdir);
+    });
+  });
 
   await db.disconnect();
 };

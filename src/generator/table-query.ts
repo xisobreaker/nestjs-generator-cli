@@ -23,7 +23,7 @@ interface ColumnInfo {
   foreignKeyColumn: string;
 };
 
-interface TableInfo {
+export interface TableInfo {
   tableName: string;
   tableComment: string;
   columns: ColumnInfo[];
@@ -31,7 +31,13 @@ interface TableInfo {
   references: Reference[];
 };
 
-export const queryTables = async (sequelize: Sequelize, table: any): Promise<TableInfo> => {
-  const tableInfo = {} as TableInfo;
+export const queryTables = async (sequelize: Sequelize, tableName: string): Promise<TableInfo> => {
+  const tableInfo = {
+    tableName,
+    tableComment: '',
+    columns: [],
+    foreignKeys: [],
+    references: [],
+  } as TableInfo;
   return tableInfo;
 }
