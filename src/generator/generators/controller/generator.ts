@@ -1,7 +1,7 @@
-import { TableInfo } from "../../table-query";
-import AbstractGenerator from "../abstract-generator";
-import { toCamelCase, toKebabCase, toPascalCase } from "../../../common/case-utils";
 import path from "path";
+import { TableInfo } from "../../table-query";
+import { toCamelCase, toKebabCase, toPascalCase } from "../../../common/case-utils";
+import GeneratorComponent from "../generator-component";
 
 interface ControllerTemplateParams {
   routePath: string;
@@ -9,7 +9,7 @@ interface ControllerTemplateParams {
   serviceName: string;
 }
 
-export default class ControllerGenerator extends AbstractGenerator {
+export default class ControllerGenerator extends GeneratorComponent {
   constructor() {
     super('.controller.ts', path.join(__dirname, 'template.ts.ejs'));
   }

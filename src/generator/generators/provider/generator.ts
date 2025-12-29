@@ -1,7 +1,8 @@
-import { TableInfo } from "../../table-query";
-import AbstractGenerator from "../abstract-generator";
-import { toCamelCase, toPascalCase } from "../../../common/case-utils";
 import path from "path";
+import { TableInfo } from "../../table-query";
+import { toCamelCase, toPascalCase } from "../../../common/case-utils";
+import GeneratorComponent from "../generator-component";
+
 
 interface ProviderTemplateParams {
   tableName: string;
@@ -9,7 +10,7 @@ interface ProviderTemplateParams {
   providerName: string;
 }
 
-export default class ProviderGenerator extends AbstractGenerator {
+export default class ProviderGenerator extends GeneratorComponent {
   constructor() {
     super('.provider.ts', path.join(__dirname, 'template.ts.ejs'));
   }

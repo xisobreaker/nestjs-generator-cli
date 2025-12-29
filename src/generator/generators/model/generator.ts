@@ -1,7 +1,7 @@
 import path from "path";
 import { toPascalCase } from "../../../common/case-utils";
 import { TableInfo } from "../../table-query";
-import AbstractGenerator from "../abstract-generator";
+import GeneratorComponent from "../generator-component";
 
 interface ModelTemplateParams {
   tableName: string;
@@ -9,7 +9,7 @@ interface ModelTemplateParams {
   modelName: string;
 }
 
-export default class ModelGenerator extends AbstractGenerator {
+export default class ModelGenerator extends GeneratorComponent {
   constructor() {
     super('.model.ts', path.join(__dirname, 'template.ts.ejs'));
   }

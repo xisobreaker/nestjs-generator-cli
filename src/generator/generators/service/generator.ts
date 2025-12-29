@@ -1,7 +1,7 @@
-import { TableInfo } from "../../table-query";
-import AbstractGenerator from "../abstract-generator";
-import { toPascalCase } from "../../../common/case-utils";
 import path from "path";
+import { TableInfo } from "../../table-query";
+import { toPascalCase } from "../../../common/case-utils";
+import GeneratorComponent from "../generator-component";
 
 interface ServiceTemplateParams {
   tableName: string;
@@ -9,7 +9,7 @@ interface ServiceTemplateParams {
   serviceName: string;
 }
 
-export default class ServiceGenerator extends AbstractGenerator {
+export default class ServiceGenerator extends GeneratorComponent {
 
   constructor() {
     super('.service.ts', path.join(__dirname, 'template.ts.ejs'));

@@ -1,7 +1,7 @@
-import { TableInfo } from "../../table-query";
-import AbstractGenerator from "../abstract-generator";
-import { toPascalCase } from "../../../common/case-utils";
 import path from "path";
+import { TableInfo } from "../../table-query";
+import { toPascalCase } from "../../../common/case-utils";
+import GeneratorComponent from "../generator-component";
 
 interface InterfaceTemplateParams {
   tableName: string;
@@ -9,7 +9,7 @@ interface InterfaceTemplateParams {
   interfaceName: string;
 }
 
-export default class InterfaceGenerator extends AbstractGenerator {
+export default class InterfaceGenerator extends GeneratorComponent {
   constructor() {
     super('.interface.ts', path.join(__dirname, 'template.ts.ejs'));
   }

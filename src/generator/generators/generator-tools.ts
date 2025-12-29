@@ -1,5 +1,6 @@
 import AbstractGenerator from "./abstract-generator";
 import ControllerGenerator from "./controller/generator";
+import DtoGenerator from "./dto/generator";
 import InterfaceGenerator from "./interface/generator";
 import ModelGenerator from "./model/generator";
 import ModuleGenerator from "./module/generator";
@@ -21,6 +22,12 @@ export const getCodeGenerators = (): GeneratorInfo[] => {
     {
       name: 'controller',
       generator: new ControllerGenerator(),
+      outdir: 'app/src',
+      useSepDir: true,
+    },
+    {
+      name: 'dto',
+      generator: new DtoGenerator(),
       outdir: 'app/src',
       useSepDir: true,
     },

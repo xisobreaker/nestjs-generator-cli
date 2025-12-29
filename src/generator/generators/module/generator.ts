@@ -1,13 +1,13 @@
-import { TableInfo } from "../../table-query";
-import AbstractGenerator from "../abstract-generator";
-import { toCamelCase, toKebabCase, toPascalCase } from "../../../common/case-utils";
 import path from "path";
+import { TableInfo } from "../../table-query";
+import { toPascalCase } from "../../../common/case-utils";
+import GeneratorComponent from "../generator-component";
 
 interface ModuleTemplateParams {
   moduleName: string;
 }
 
-export default class ModuleGenerator extends AbstractGenerator {
+export default class ModuleGenerator extends GeneratorComponent {
   constructor() {
     super('.module.ts', path.join(__dirname, 'template.ts.ejs'));
   }
