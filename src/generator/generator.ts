@@ -1,6 +1,6 @@
 import path from "path";
 import { Database, DatabaseConfig } from "./database";
-import { initColumnsModel } from "./models/colume.model";
+import { initColumnsModel } from "./models/columns.model";
 import { initKeyColumnUsageModel } from "./models/key-column-usage.model";
 import { initReferentialConstraintsModel } from "./models/referential-constraints.model";
 import { initTablesModel, TablesModel } from "./models/table.model";
@@ -8,7 +8,7 @@ import { existsSync, readFileSync } from "fs";
 import { checkboxPrompt } from "../common/prompt-utils";
 import { Op } from "sequelize";
 import { getCodeGenerators, GeneratorInfo } from "./generators/generator-tools";
-import { queryTables, TableInfo } from "./table-query";
+import { queryTableDetails, TableInfo } from "./table-query";
 
 /**
  * 获取数据库配置
@@ -90,14 +90,13 @@ export const generateCode = async () => {
 
   // 查询数据库表信息
   const tableInfos = await Promise.all(tables.map((table) => {
-    console.log(`查询数据库表信息: ${table.tableName}`);
-    return queryTables(sequelize, table.tableName);
+    return queryTableDetails(dbconfig.database, table.tableName, table.tableComment);
   }));
 
   // 生成代码
   templates.forEach((template: GeneratorInfo) => {
     tableInfos.forEach((tableInfo: TableInfo) => {
-      template.generator.generate(tableInfo, template.outdir);
+      template.generator.generate(tableInfo, template.outdir, template.useSepDir);
     });
   });
 

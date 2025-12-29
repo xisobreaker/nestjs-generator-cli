@@ -25,3 +25,13 @@ export const initKeyColumnUsageModel = (sequelize: Sequelize) => {
   });
   KeyColumnUsageModel.removeAttribute('id');
 };
+
+export interface KeyColumnUsage {
+  constraintSchema: string;
+  constraintName: string;
+  tableSchema: string;
+  tableName: string;
+  columnName: string;
+  referencedTableName: string;
+  referencedColumnName: string;
+}

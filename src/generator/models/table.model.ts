@@ -15,3 +15,9 @@ export const initTablesModel = (sequelize: Sequelize) => {
   });
   TablesModel.removeAttribute('id');
 };
+
+export interface Table {
+  tableSchema: string;
+  tableName: string;
+  tableComment: string;
+}

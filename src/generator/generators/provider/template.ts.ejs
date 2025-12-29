@@ -1,0 +1,6 @@
+export const <%= providerName %>Providers = [
+  {
+    provide: '<%= tableName.toUpperCase() %>_REPOSITORY',
+    useValue: <%= modelName %>Model,
+  },
+];

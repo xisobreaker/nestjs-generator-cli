@@ -1,14 +1,25 @@
+import path from "path";
+import { toPascalCase } from "../../../common/case-utils";
 import { TableInfo } from "../../table-query";
 import AbstractGenerator from "../abstract-generator";
 
-export default class ModelGenerator extends AbstractGenerator {
-  private suffixName = '.model.ts';
+interface ModelTemplateParams {
+  tableName: string;
+  tableComment: string;
+  modelName: string;
+}
 
+export default class ModelGenerator extends AbstractGenerator {
   constructor() {
-    super();
+    super('.model.ts', path.join(__dirname, 'template.ts.ejs'));
   }
 
-  protected operator(tableInfo: TableInfo, outputDir: string): void {
-
+  protected operator(tableInfo: TableInfo): Record<string, any> {
+    const templateParams: ModelTemplateParams = {
+      tableName: tableInfo.tableName,
+      tableComment: tableInfo.tableComment,
+      modelName: toPascalCase(tableInfo.tableName),
+    };
+    return templateParams;
   }
 }

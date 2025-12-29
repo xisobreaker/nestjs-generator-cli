@@ -1,10 +1,10 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 
-export class ColumesModel extends Model {
+export class ColumnsModel extends Model {
 };
 
 export const initColumnsModel = (sequelize: Sequelize) => {
-  ColumesModel.init({
+  ColumnsModel.init({
     tableSchema: { type: DataTypes.STRING(64), comment: '表所属数据库' },
     tableName: { type: DataTypes.STRING(64), comment: '表名称' },
     columnName: { type: DataTypes.STRING(64), comment: '字段名称' },
@@ -20,8 +20,21 @@ export const initColumnsModel = (sequelize: Sequelize) => {
     },
   }, {
     sequelize,
-    modelName: 'columes',
-    tableName: 'columes',
+    modelName: 'columns',
+    tableName: 'columns',
   });
-  ColumesModel.removeAttribute('id');
+  ColumnsModel.removeAttribute('id');
+}
+
+export interface Columns {
+  tableSchema: string;
+  tableName: string;
+  columnName: string;
+  columnComment: string;
+  dataType: string;
+  characterMaximumLength: number;
+  isNullable: string;
+  numericPrecision: number;
+  numericScale: number;
+  columnKey: '' | 'PRI' | 'UNI' | 'MUL';
 }

@@ -26,10 +26,12 @@
   },
   "homepage": "https://github.com/xisobreaker/nestjs-generator-cli#readme",
   "devDependencies": {
-    "@types/lodash": "^4.17.21",
+    "@types/bluebird": "^3.5.42",
     "@types/commander": "^2.12.5",
+    "@types/ejs": "^3.1.5",
     "@types/inquirer": "^9.0.9",
     "@types/jest": "^30.0.0",
+    "@types/lodash": "^4.17.21",
     "@types/node": "^25.0.3",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
@@ -42,7 +44,9 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "bluebird": "^3.7.2",
     "commander": "^14.0.2",
+    "ejs": "^3.1.10",
     "inquirer": "^13.1.0",
     "lodash": "^4.17.21",
     "mysql2": "^3.16.0",

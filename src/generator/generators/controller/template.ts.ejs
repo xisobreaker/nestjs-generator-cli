@@ -1,0 +1,6 @@
+import { Controller, Get, Query } from '@nestjs/common';
+
+@Controller('<%= routePath %>')
+export class <%= controllerName %>Controller {
+  constructor(private readonly <%= serviceName %>Service: <%= controllerName %>Service) { }
+}

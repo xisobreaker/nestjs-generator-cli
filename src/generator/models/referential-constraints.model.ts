@@ -1,4 +1,5 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
+import { KeyColumnUsage } from "./key-column-usage.model";
 
 export class ReferentialConstraintsModel extends Model {
 };
@@ -39,3 +40,13 @@ export const initReferentialConstraintsModel = (sequelize: Sequelize) => {
   });
   ReferentialConstraintsModel.removeAttribute('id');
 };
+
+export interface ReferentialConstraint {
+  constraintSchema: string;
+  constraintName: string;
+  updateRule: "NO ACTION" | "RESTRICT" | "CASCADE" | "SET NULL" | "SET DEFAULT";
+  deleteRule: "NO ACTION" | "RESTRICT" | "CASCADE" | "SET NULL" | "SET DEFAULT";
+  tableName: string;
+  referencedTableName: string;
+  keyColumnUsage: KeyColumnUsage;
+}

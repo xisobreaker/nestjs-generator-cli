@@ -1,8 +1,9 @@
-import { Table } from 'sequelize-typescript';
+import { Model, Table } from 'sequelize-typescript';
 
 @Table({
   tableName: '<%= tableName %>',
+  comment: '<%= tableComment %>',
 })
-export class <%= modelName %> {
+export class <%= modelName %> extends Model {
 
 }
