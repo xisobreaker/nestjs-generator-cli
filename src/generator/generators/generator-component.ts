@@ -3,7 +3,7 @@ import { toKebabCase } from "../../common/case-utils";
 import { EJSTemplateEngine } from "../../common/ejs-template";
 import { TableInfo } from "../table-query";
 import AbstractGenerator from "./abstract-generator";
-import { existsSync, mkdirSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, rmSync, writeFileSync } from "fs";
 import { GeneratorConfig } from "../configure";
 
 export default abstract class GeneratorComponent extends AbstractGenerator {
@@ -45,7 +45,8 @@ export default abstract class GeneratorComponent extends AbstractGenerator {
 
     // 生成代码文件
     const renderedContent = this.ejsEngine.render(templateParams);
-    writeFileSync(path.join(outputDir, filename), renderedContent);
+    const fullPathname = path.join(outputDir, filename);
+    writeFileSync(fullPathname, renderedContent);
   }
 
   /**

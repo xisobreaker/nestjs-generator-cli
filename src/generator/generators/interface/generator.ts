@@ -1,13 +1,15 @@
 import path from "path";
 import { TableInfo } from "../../table-query";
-import { toPascalCase } from "../../../common/case-utils";
+import { toCamelCase, toKebabCase, toPascalCase } from "../../../common/case-utils";
 import GeneratorComponent from "../generator-component";
 import { GeneratorConfig } from "../../configure";
 
 interface InterfaceTemplateParams {
+  kebabName: string;
+  pascalName: string;
+  camelName: string;
   tableName: string;
   tableComment: string;
-  interfaceName: string;
 }
 
 export default class InterfaceGenerator extends GeneratorComponent {
@@ -16,10 +18,16 @@ export default class InterfaceGenerator extends GeneratorComponent {
   }
 
   protected operator(tableInfo: TableInfo, configParam: GeneratorConfig): Record<string, any> {
+    const kebabName = toKebabCase(tableInfo.tableName);
+    const pascalName = toPascalCase(tableInfo.tableName);
+    const camelName = toCamelCase(tableInfo.tableName);
+
     const templateParams: InterfaceTemplateParams = {
+      kebabName,
+      pascalName,
+      camelName,
       tableName: tableInfo.tableName,
       tableComment: tableInfo.tableComment,
-      interfaceName: toPascalCase(tableInfo.tableName),
     };
     return templateParams;
   }

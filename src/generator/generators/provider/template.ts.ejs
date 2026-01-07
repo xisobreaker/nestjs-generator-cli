@@ -1,6 +1,8 @@
-export const <%= providerName %>Providers = [
+<%- importModules %>
+
+export const <%= camelName %>Providers = [
   {
     provide: '<%= tableName.toUpperCase() %>_REPOSITORY',
-    useValue: <%= modelName %>Model,
+    useValue: <%= pascalName %>Model,
   },
 ];

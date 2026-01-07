@@ -1,11 +1,14 @@
 import path from "path";
 import { TableInfo } from "../../table-query";
-import { toPascalCase } from "../../../common/case-utils";
+import { toCamelCase, toKebabCase, toPascalCase } from "../../../common/case-utils";
 import GeneratorComponent from "../generator-component";
 import { GeneratorConfig } from "../../configure";
 
 interface ModuleTemplateParams {
-  moduleName: string;
+  kebabName: string;
+  pascalName: string;
+  camelName: string;
+  importModules: string;
 }
 
 export default class ModuleGenerator extends GeneratorComponent {
@@ -14,8 +17,21 @@ export default class ModuleGenerator extends GeneratorComponent {
   }
 
   protected operator(tableInfo: TableInfo, configParam: GeneratorConfig): Record<string, any> {
+    const kebabName = toKebabCase(tableInfo.tableName);
+    const pascalName = toPascalCase(tableInfo.tableName);
+    const camelName = toCamelCase(tableInfo.tableName);
+
+    // 导入模块
+    const importModules = [];
+    importModules.push(`import { ${pascalName}Controller } from \'./${kebabName}.controller\';`);
+    importModules.push(`import { ${pascalName}Service } from \'./${kebabName}.service\';`);
+    importModules.push(`import { ${camelName}Providers } from \'./${kebabName}.provider\';`);
+
     const templateParams: ModuleTemplateParams = {
-      moduleName: toPascalCase(tableInfo.tableName),
+      kebabName,
+      pascalName,
+      camelName,
+      importModules: importModules.join('\n'),
     };
     return templateParams;
   }

@@ -15,9 +15,9 @@ export default abstract class GeneratorComposite extends AbstractGenerator {
     this.dirName = dirName;
   }
 
-  public generate(tableInfo: TableInfo, configParam: GeneratorConfig, outputDir: string, useSepDir: boolean): void {
+  public generate(tableInfo: TableInfo, configParam: GeneratorConfig, outputDir: string, isolatedDir: boolean): void {
     // 检查是否需要使用分离的目录
-    if (useSepDir) {
+    if (isolatedDir) {
       outputDir = path.join(outputDir, toKebabCase(tableInfo.tableName));
     }
     outputDir = path.join(outputDir, this.dirName);

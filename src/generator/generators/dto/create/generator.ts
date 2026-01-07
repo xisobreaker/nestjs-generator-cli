@@ -5,7 +5,9 @@ import { toCamelCase, toKebabCase, toPascalCase } from "../../../../common/case-
 import { GeneratorConfig } from "../../../configure";
 
 interface CreateDtoTemplateParams {
-  dtoName: string;
+  kebabName: string;
+  pascalName: string;
+  camelName: string;
 }
 
 export default class CreateDtoGenerator extends GeneratorComponent {
@@ -14,8 +16,14 @@ export default class CreateDtoGenerator extends GeneratorComponent {
   }
 
   protected operator(tableInfo: TableInfo, configParam: GeneratorConfig): Record<string, any> {
+    const kebabName = toKebabCase(tableInfo.tableName);
+    const pascalName = toPascalCase(tableInfo.tableName);
+    const camelName = toCamelCase(tableInfo.tableName);
+
     const templateParams: CreateDtoTemplateParams = {
-      dtoName: toPascalCase(tableInfo.tableName),
+      kebabName,
+      pascalName,
+      camelName,
     };
 
     return templateParams;

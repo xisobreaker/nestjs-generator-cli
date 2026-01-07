@@ -1,8 +1,9 @@
 import { Module } from '@nestjs/common';
+<%- importModules %>
 
 @Module({
   imports: [DatabaseModule],
-  controllers: [<%= moduleName %>Controller],
-  providers: [<%= moduleName %>Service, ...<%= moduleName %>Providers],
+  controllers: [<%= pascalName %>Controller],
+  providers: [<%= pascalName %>Service, ...<%= camelName %>Providers],
 })
-export class <%= moduleName %>Module { }
+export class <%= pascalName %>Module { }

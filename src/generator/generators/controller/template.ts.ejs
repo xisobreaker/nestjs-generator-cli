@@ -1,6 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
+<%- importModules %>
 
-@Controller('<%= routePath %>')
-export class <%= controllerName %>Controller {
-  constructor(private readonly <%= serviceName %>Service: <%= controllerName %>Service) { }
+@Controller('<%= kebabName %>')
+export class <%= pascalName %>Controller {
+  constructor(private readonly <%= camelName %>Service: <%= pascalName %>Service) { }
 }

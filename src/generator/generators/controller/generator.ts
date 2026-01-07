@@ -5,9 +5,10 @@ import GeneratorComponent from "../generator-component";
 import { GeneratorConfig } from "../../configure";
 
 interface ControllerTemplateParams {
-  routePath: string;
-  controllerName: string;
-  serviceName: string;
+  kebabName: string;
+  pascalName: string;
+  camelName: string;
+  importModules: string;
 }
 
 export default class ControllerGenerator extends GeneratorComponent {
@@ -16,12 +17,20 @@ export default class ControllerGenerator extends GeneratorComponent {
   }
 
   protected operator(tableInfo: TableInfo, configParam: GeneratorConfig): Record<string, any> {
-    const templateParams: ControllerTemplateParams = {
-      routePath: `${toKebabCase(tableInfo.tableName)}`,
-      controllerName: toPascalCase(tableInfo.tableName),
-      serviceName: toCamelCase(tableInfo.tableName),
-    };
+    const kebabName = toKebabCase(tableInfo.tableName);
+    const pascalName = toPascalCase(tableInfo.tableName);
+    const camelName = toCamelCase(tableInfo.tableName);
 
+    // 导入模块
+    const importModules = [];
+    importModules.push(`import { ${pascalName}Service } from \'./${kebabName}.service\';`);
+
+    const templateParams: ControllerTemplateParams = {
+      kebabName,
+      pascalName,
+      camelName,
+      importModules: importModules.join('\n'),
+    };
     return templateParams;
   }
 }
