@@ -9,6 +9,7 @@ import { checkboxPrompt } from "../common/prompt-utils";
 import { Op } from "sequelize";
 import { getCodeGenerators, GeneratorInfo } from "./generators/generator-tools";
 import { queryTableDetails, TableInfo } from "./table-query";
+import { loadGeneratorConfig } from "./configure";
 
 /**
  * 获取数据库配置
@@ -72,6 +73,9 @@ const choiceTemplates = async () => {
 }
 
 export const generateCode = async () => {
+  // 加载配置文件
+  const configParam = loadGeneratorConfig(process.cwd());
+
   // 初始化数据库连接
   const dbconfig = getDBConfig();
   const db = new Database({ ...dbconfig, database: 'information_schema' });
@@ -96,7 +100,12 @@ export const generateCode = async () => {
   // 生成代码
   templates.forEach((template: GeneratorInfo) => {
     tableInfos.forEach((tableInfo: TableInfo) => {
-      template.generator.generate(tableInfo, template.outdir, template.useSepDir);
+      template.generator.generate(
+        tableInfo,
+        configParam,
+        template.outputDir,
+        template.isolatedDir
+      );
     });
   });
 

@@ -4,6 +4,7 @@ import { EJSTemplateEngine } from "../../common/ejs-template";
 import { TableInfo } from "../table-query";
 import AbstractGenerator from "./abstract-generator";
 import { existsSync, mkdirSync, writeFileSync } from "fs";
+import { GeneratorConfig } from "../configure";
 
 export default abstract class GeneratorComponent extends AbstractGenerator {
   private ejsEngine: EJSTemplateEngine;
@@ -27,9 +28,9 @@ export default abstract class GeneratorComponent extends AbstractGenerator {
    * @param tableInfo 数据库表信息
    * @param outputDir 输出目录
    */
-  public generate(tableInfo: TableInfo, outputDir: string, useSepDir: boolean) {
+  public generate(tableInfo: TableInfo, configParam: GeneratorConfig, outputDir: string, isolatedDir: boolean) {
     // 检查是否需要使用分离的目录
-    if (useSepDir) {
+    if (isolatedDir) {
       outputDir = path.join(outputDir, toKebabCase(tableInfo.tableName));
     }
 
@@ -40,7 +41,7 @@ export default abstract class GeneratorComponent extends AbstractGenerator {
 
     // 调用具体的生成代码逻辑
     const filename = `${toKebabCase(tableInfo.tableName)}${this.suffixName}`;
-    const templateParams = this.operator(tableInfo);
+    const templateParams = this.operator(tableInfo, configParam);
 
     // 生成代码文件
     const renderedContent = this.ejsEngine.render(templateParams);
@@ -62,5 +63,5 @@ export default abstract class GeneratorComponent extends AbstractGenerator {
    * @param outputDir 输出目录
    * @param filename 文件名
    */
-  protected abstract operator(tableInfo: TableInfo): Record<string, any>;
+  protected abstract operator(tableInfo: TableInfo, configParam: GeneratorConfig): Record<string, any>;
 }

@@ -1,3 +1,4 @@
+import { GeneratorConfig } from "../configure";
 import { TableInfo } from "../table-query";
 
 /**
@@ -10,7 +11,7 @@ export default abstract class AbstractGenerator {
    * @param tableInfo 数据库表信息
    * @param outputDir 输出目录
    */
-  public abstract generate(tableInfo: TableInfo, outputDir: string, useSepDir: boolean): void;
+  public abstract generate(tableInfo: TableInfo, configParam: GeneratorConfig, outputDir: string, isolatedDir: boolean): void;
 
   /**
    * @brief 添加子生成器

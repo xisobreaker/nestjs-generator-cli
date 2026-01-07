@@ -2,6 +2,7 @@ import path from "path";
 import { TableInfo } from "../../table-query";
 import { toCamelCase, toPascalCase } from "../../../common/case-utils";
 import GeneratorComponent from "../generator-component";
+import { GeneratorConfig } from "../../configure";
 
 
 interface ProviderTemplateParams {
@@ -15,7 +16,7 @@ export default class ProviderGenerator extends GeneratorComponent {
     super('.provider.ts', path.join(__dirname, 'template.ts.ejs'));
   }
 
-  protected operator(tableInfo: TableInfo): Record<string, any> {
+  protected operator(tableInfo: TableInfo, configParam: GeneratorConfig): Record<string, any> {
     const templateParams: ProviderTemplateParams = {
       tableName: tableInfo.tableName,
       modelName: toPascalCase(tableInfo.tableName),

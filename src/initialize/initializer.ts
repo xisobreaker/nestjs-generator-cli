@@ -1,3 +1,5 @@
+import { initGeneratorConfig } from "../generator/configure";
+
 export const initProject = async () => {
-  console.log('项目初始化');
+  initGeneratorConfig(process.cwd());
 };

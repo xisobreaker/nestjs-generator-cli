@@ -13,8 +13,8 @@ import ServiceGenerator from "./service/generator";
 export interface GeneratorInfo {
   name: string;
   generator: AbstractGenerator;
-  outdir: string;     // 输出目录
-  useSepDir: boolean; // 使用分离的目录
+  outputDir: string;     // 输出目录
+  isolatedDir: boolean; // 使用分离的目录
 };
 
 export const getCodeGenerators = (): GeneratorInfo[] => {
@@ -22,44 +22,44 @@ export const getCodeGenerators = (): GeneratorInfo[] => {
     {
       name: 'controller',
       generator: new ControllerGenerator(),
-      outdir: 'app/src',
-      useSepDir: true,
+      outputDir: 'app/src',
+      isolatedDir: true,
     },
     {
       name: 'dto',
       generator: new DtoGenerator(),
-      outdir: 'app/src',
-      useSepDir: true,
+      outputDir: 'app/src',
+      isolatedDir: true,
     },
     {
       name: 'interface',
       generator: new InterfaceGenerator(),
-      outdir: 'app/src',
-      useSepDir: true,
+      outputDir: 'app/src',
+      isolatedDir: true,
     },
     {
       name: 'model',
       generator: new ModelGenerator(),
-      outdir: 'app/src',
-      useSepDir: true,
+      outputDir: 'app/src',
+      isolatedDir: true,
     },
     {
       name: 'module',
       generator: new ModuleGenerator(),
-      outdir: 'app/src',
-      useSepDir: true,
+      outputDir: 'app/src',
+      isolatedDir: true,
     },
     {
       name: 'provider',
       generator: new ProviderGenerator(),
-      outdir: 'app/src',
-      useSepDir: true,
+      outputDir: 'app/src',
+      isolatedDir: true,
     },
     {
       name: 'service',
       generator: new ServiceGenerator(),
-      outdir: 'app/src',
-      useSepDir: true,
+      outputDir: 'app/src',
+      isolatedDir: true,
     },
   ];
 

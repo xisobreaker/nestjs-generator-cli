@@ -6,4 +6,5 @@ dist
 database
 
 # project
+.generator-cli.json
 app/src/
