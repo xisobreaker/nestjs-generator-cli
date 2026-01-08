@@ -20,7 +20,6 @@ export interface GeneratorConfig {
   interface: TemplateConfig;
   model: TemplateConfig;
   module: TemplateConfig;
-  provider: TemplateConfig;
   service: TemplateConfig;
 }
 
@@ -32,31 +31,27 @@ export interface GeneratorConfig {
 export const getDefaultConfig = (): GeneratorConfig => {
   return {
     controller: {
-      outputDir: 'app/src',
+      outputDir: 'app/src/modules',
       isolatedDir: true,
     },
     dto: {
-      outputDir: 'app/src',
+      outputDir: 'app/src/modules',
       isolatedDir: true,
     },
     interface: {
-      outputDir: 'app/src',
+      outputDir: 'app/src/modules',
       isolatedDir: true,
     },
     model: {
-      outputDir: 'app/src',
-      isolatedDir: true,
+      outputDir: 'app/src/models',
+      isolatedDir: false,
     },
     module: {
-      outputDir: 'app/src',
-      isolatedDir: true,
-    },
-    provider: {
-      outputDir: 'app/src',
+      outputDir: 'app/src/modules',
       isolatedDir: true,
     },
     service: {
-      outputDir: 'app/src',
+      outputDir: 'app/src/modules',
       isolatedDir: true,
     },
   };

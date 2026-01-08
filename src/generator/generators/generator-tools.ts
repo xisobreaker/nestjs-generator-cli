@@ -1,10 +1,10 @@
+import { GeneratorConfig } from "../configure";
 import AbstractGenerator from "./abstract-generator";
 import ControllerGenerator from "./controller/generator";
 import DtoGenerator from "./dto/generator";
 import InterfaceGenerator from "./interface/generator";
 import ModelGenerator from "./model/generator";
 import ModuleGenerator from "./module/generator";
-import ProviderGenerator from "./provider/generator";
 import ServiceGenerator from "./service/generator";
 
 /**
@@ -17,49 +17,43 @@ export interface GeneratorInfo {
   isolatedDir: boolean; // 使用分离的目录
 };
 
-export const getCodeGenerators = (): GeneratorInfo[] => {
+export const getCodeGenerators = (options: GeneratorConfig): GeneratorInfo[] => {
   const codeGenerators: GeneratorInfo[] = [
     {
       name: 'controller',
       generator: new ControllerGenerator(),
-      outputDir: 'app/src',
-      isolatedDir: true,
+      outputDir: options.controller.outputDir,
+      isolatedDir: options.controller.isolatedDir,
     },
     {
       name: 'dto',
       generator: new DtoGenerator(),
-      outputDir: 'app/src',
-      isolatedDir: true,
+      outputDir: options.dto.outputDir,
+      isolatedDir: options.dto.isolatedDir,
     },
     {
       name: 'interface',
       generator: new InterfaceGenerator(),
-      outputDir: 'app/src',
-      isolatedDir: true,
+      outputDir: options.interface.outputDir,
+      isolatedDir: options.interface.isolatedDir,
     },
     {
       name: 'model',
       generator: new ModelGenerator(),
-      outputDir: 'app/src',
-      isolatedDir: true,
+      outputDir: options.model.outputDir,
+      isolatedDir: options.model.isolatedDir,
     },
     {
       name: 'module',
       generator: new ModuleGenerator(),
-      outputDir: 'app/src',
-      isolatedDir: true,
-    },
-    {
-      name: 'provider',
-      generator: new ProviderGenerator(),
-      outputDir: 'app/src',
-      isolatedDir: true,
+      outputDir: options.module.outputDir,
+      isolatedDir: options.module.isolatedDir,
     },
     {
       name: 'service',
       generator: new ServiceGenerator(),
-      outputDir: 'app/src',
-      isolatedDir: true,
+      outputDir: options.service.outputDir,
+      isolatedDir: options.service.isolatedDir,
     },
   ];
 

@@ -9,7 +9,7 @@ import { checkboxPrompt } from "../common/prompt-utils";
 import { Op } from "sequelize";
 import { getCodeGenerators, GeneratorInfo } from "./generators/generator-tools";
 import { queryTableDetails, TableInfo } from "./table-query";
-import { loadGeneratorConfig } from "./configure";
+import { GeneratorConfig, loadGeneratorConfig } from "./configure";
 
 /**
  * 获取数据库配置
@@ -64,8 +64,8 @@ const choiceTables = async (tableSchema: string) => {
 /**
  * 选择要生成的代码类型
  */
-const choiceTemplates = async () => {
-  const codeGenerators = getCodeGenerators();
+const choiceTemplates = async (configParam: GeneratorConfig) => {
+  const codeGenerators = getCodeGenerators(configParam);
   return await checkboxPrompt('请选择要生成的代码类型', codeGenerators.map((generator) => ({
     key: generator.name,
     value: generator,
@@ -90,7 +90,7 @@ export const generateCode = async () => {
   const tables = await choiceTables(dbconfig.database);
 
   // 选择要生成的代码类型
-  const templates = await choiceTemplates();
+  const templates = await choiceTemplates(configParam);
 
   // 查询数据库表信息
   const tableInfos = await Promise.all(tables.map((table) => {
