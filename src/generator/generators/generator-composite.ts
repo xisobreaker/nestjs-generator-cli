@@ -20,7 +20,9 @@ export default abstract class GeneratorComposite extends AbstractGenerator {
     if (isolatedDir) {
       outputDir = path.join(outputDir, toKebabCase(tableInfo.tableName));
     }
-    outputDir = path.join(outputDir, this.dirName);
+    if (this.dirName && this.dirName !== '') {
+      outputDir = path.join(outputDir, this.dirName);
+    }
 
     // 检查输出目录是否存在
     if (!existsSync(outputDir)) {

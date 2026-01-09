@@ -1,0 +1,54 @@
+import { Args, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/graphql";
+import type { IQueryListParam } from "src/interface/db.interface";
+import { <%= pascalName %>Service } from "./<%= kebabName %>.service";
+import { <%= pascalName %>CreateDto } from "./dto/<%= kebabName %>.create";
+
+@Resolver('<%= pascalName %>')
+export class <%= pascalName %>Resolver {
+  constructor(
+    private readonly <%= camelName %>Service: <%= pascalName %>Service
+  ) { }
+
+  @Query('<%= camelName %>')
+  async <%= camelName %>(@Args('id') id: string): Promise<any> {
+    return this.<%= camelName %>Service.findByPk(id);
+  }
+
+  @Query('<%= camelName %>List')
+  async <%= camelName %>List(@Args('param') param: IQueryListParam): Promise<any> {
+    return this.<%= camelName %>Service.findAndCountAll(param);
+  }
+
+  @Query('<%= camelName %>Count')
+  async <%= camelName %>Count(@Args('param') param: IQueryListParam): Promise<any> {
+    return this.<%= camelName %>Service.count(param);
+  }
+
+  @Query('<%= camelName %>All')
+  async <%= camelName %>All(@Args('param') param: IQueryListParam): Promise<any> {
+    return this.<%= camelName %>Service.findAll(param);
+  }
+
+  @Mutation('<%= camelName %>')
+  async save<%= pascalName %>(@Args('param') input: <%= pascalName %>CreateDto): Promise<any> {
+    if (input.id) {
+      return this.<%= camelName %>Service.update(input.id, input as any);
+    }
+    return this.<%= camelName %>Service.create(input as any);
+  }
+
+  @Mutation('<%= camelName %>Bulk')
+  async <%= camelName %>Bulk(@Args('param') input: <%= pascalName %>CreateDto[]) {
+    return this.<%= camelName %>Service.bulkCreate(input as any);
+  }
+
+  @Mutation('<%= camelName %>Destroy')
+  async <%= camelName %>Destroy(@Args('where') param: any) {
+    return this.<%= camelName %>Service.destroy(param);
+  }
+
+  @Mutation('<%= camelName %>DestroyById')
+  async <%= camelName %>DestroyById(@Args('id') id: string) {
+    return this.<%= camelName %>Service.remove(id);
+  }
+}

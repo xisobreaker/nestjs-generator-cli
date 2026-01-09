@@ -2,6 +2,7 @@ import { GeneratorConfig } from "../configure";
 import AbstractGenerator from "./abstract-generator";
 import ControllerGenerator from "./controller/generator";
 import DtoGenerator from "./dto/generator";
+import GqlGenerator from "./graphql/generator";
 import InterfaceGenerator from "./interface/generator";
 import ModelGenerator from "./model/generator";
 import ModuleGenerator from "./module/generator";
@@ -30,6 +31,12 @@ export const getCodeGenerators = (options: GeneratorConfig): GeneratorInfo[] => 
       generator: new DtoGenerator(),
       outputDir: options.dto.outputDir,
       isolatedDir: options.dto.isolatedDir,
+    },
+    {
+      name: 'graphql',
+      generator: new GqlGenerator(),
+      outputDir: options.graphql.outputDir,
+      isolatedDir: options.graphql.isolatedDir,
     },
     {
       name: 'interface',

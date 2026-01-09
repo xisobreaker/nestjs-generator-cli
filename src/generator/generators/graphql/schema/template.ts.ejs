@@ -1,0 +1,26 @@
+type <%= pascalName %> = {
+  id: ID
+}
+
+type <%= pascalName %>List = {
+  total: Int!
+  list: [<%= pascalName %>]
+}
+
+extend type Query {
+  <%= camelName %>(id: ID!): <%= pascalName %>
+  <%= camelName %>List(param: QueryListParam): <%= pascalName %>List
+  <%= camelName %>Count(param: QueryListParam): Int!
+  <%= camelName %>All(param: QueryListParam): [<%= pascalName %>]
+}
+
+extend type Mutation {
+  <%= camelName %>(param: <%= pascalName %>Input): <%= pascalName %>
+  <%= camelName %>Bulk(param: [<%= pascalName %>Input]): [<%= pascalName %>]
+  <%= camelName %>Destroy(where: JSON!): Int!
+  <%= camelName %>DestroyById(id: ID!): Boolean
+}
+
+input <%= pascalName %>Input {
+  id: ID
+}

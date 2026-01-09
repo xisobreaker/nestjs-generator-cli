@@ -17,6 +17,7 @@ interface TemplateConfig {
 export interface GeneratorConfig {
   controller: TemplateConfig;
   dto: TemplateConfig;
+  graphql: TemplateConfig;
   interface: TemplateConfig;
   model: TemplateConfig;
   module: TemplateConfig;
@@ -35,6 +36,10 @@ export const getDefaultConfig = (): GeneratorConfig => {
       isolatedDir: true,
     },
     dto: {
+      outputDir: 'app/src/modules',
+      isolatedDir: true,
+    },
+    graphql: {
       outputDir: 'app/src/modules',
       isolatedDir: true,
     },
