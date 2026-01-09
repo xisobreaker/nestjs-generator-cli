@@ -8,7 +8,6 @@ interface ModuleTemplateParams {
   kebabName: string;
   pascalName: string;
   camelName: string;
-  importModules: string;
 }
 
 export default class ModuleGenerator extends GeneratorComponent {
@@ -21,17 +20,10 @@ export default class ModuleGenerator extends GeneratorComponent {
     const pascalName = toPascalCase(tableInfo.tableName);
     const camelName = toCamelCase(tableInfo.tableName);
 
-    // 导入模块
-    const importModules = [];
-    importModules.push(`import { ${pascalName}Controller } from \'./${kebabName}.controller\';`);
-    importModules.push(`import { ${pascalName}Service } from \'./${kebabName}.service\';`);
-    importModules.push(`import { ${camelName}Providers } from \'./${kebabName}.provider\';`);
-
     const templateParams: ModuleTemplateParams = {
       kebabName,
       pascalName,
       camelName,
-      importModules: importModules.join('\n'),
     };
     return templateParams;
   }

@@ -1,11 +1,14 @@
-import { Injectable, Inject } from '@nestjs/common';
-<%- importModules %>
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { BaseService } from 'src/common/base/base.service';
+import { <%= pascalName %>Model } from '../../models/<%= kebabName %>.model';
 
 @Injectable()
-export class <%= pascalName %>Service {
+export class <%= pascalName %>Service extends BaseService<<%= pascalName %>Model> {
   constructor(
-    @Inject(<%= tableName.toUpperCase() %>_REPOSITORY)
+    @InjectModel(<%= pascalName %>Model)
     private readonly <%= camelName %>Model: typeof <%= pascalName %>Model,
   ) {
+    super(<%= camelName %>Model);
   }
 }

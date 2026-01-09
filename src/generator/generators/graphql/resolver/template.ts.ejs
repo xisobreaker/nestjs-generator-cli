@@ -2,11 +2,11 @@ import { Args, Mutation, Parent, Query, ResolveField, Resolver } from "@nestjs/g
 import type { IQueryListParam } from "src/interface/db.interface";
 import { <%= pascalName %>Service } from "./<%= kebabName %>.service";
 import { <%= pascalName %>CreateDto } from "./dto/<%= kebabName %>.create";
-
+<%- extendImports %>
 @Resolver('<%= pascalName %>')
 export class <%= pascalName %>Resolver {
   constructor(
-    private readonly <%= camelName %>Service: <%= pascalName %>Service
+    private readonly <%= camelName %>Service: <%= pascalName %>Service,<%= declareServices %>
   ) { }
 
   @Query('<%= camelName %>')
@@ -51,4 +51,6 @@ export class <%= pascalName %>Resolver {
   async <%= camelName %>DestroyById(@Args('id') id: string) {
     return this.<%= camelName %>Service.remove(id);
   }
+
+<%- resolverFields %>
 }

@@ -9,7 +9,6 @@ interface ServiceTemplateParams {
   pascalName: string;
   camelName: string;
   tableName: string;
-  importModules: string;
 }
 
 export default class ServiceGenerator extends GeneratorComponent {
@@ -22,16 +21,11 @@ export default class ServiceGenerator extends GeneratorComponent {
     const pascalName = toPascalCase(tableInfo.tableName);
     const camelName = toCamelCase(tableInfo.tableName);
 
-    // 导入模块
-    const importModules = [];
-    importModules.push(`import { ${pascalName}Model } from \'./${kebabName}.model\';`);
-
     const templateParams: ServiceTemplateParams = {
       kebabName,
       pascalName,
       camelName,
       tableName: tableInfo.tableName,
-      importModules: importModules.join('\n'),
     };
     return templateParams;
   }

@@ -1,5 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
-<%- importModules %>
+import { <%= pascalName %>Service } from './<%= kebabName %>.service';
 
 @Controller('<%= kebabName %>')
 export class <%= pascalName %>Controller {
