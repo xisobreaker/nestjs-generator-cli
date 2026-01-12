@@ -14,8 +14,8 @@ extend type Query {
 }
 
 extend type Mutation {
-  <%= camelName %>(param: <%= pascalName %>Input): <%= pascalName %>
-  <%= camelName %>Bulk(param: [<%= pascalName %>Input]): [<%= pascalName %>]
+  <%= camelName %>(param: <%= pascalName %>Input!): <%= pascalName %>
+  <%= camelName %>Bulk(param: [<%= pascalName %>Input]!): [<%= pascalName %>]
   <%= camelName %>Destroy(where: JSON!): Int!
   <%= camelName %>DestroyById(id: ID!): Boolean
 }

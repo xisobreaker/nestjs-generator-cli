@@ -1,2 +1,5 @@
-export class <%= pascalName %>UpdateDto {<%= columnStr %> 
+import { Transform } from "class-transformer";
+import { IsOptional } from "class-validator";
+
+export class <%= pascalName %>UpdateDto {<%= columnStr %>
 }

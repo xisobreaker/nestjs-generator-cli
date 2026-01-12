@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && copyfiles -u 1 src/**/*.ejs dist/",
     "debug": "ts-node-dev src/index.ts",
     "start": "ts-node src/index.ts",
     "start:dist": "ts-node src/index.ts",
@@ -33,6 +33,7 @@
     "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.21",
     "@types/node": "^25.0.3",
+    "copyfiles": "^2.4.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "jest": "^30.2.0",

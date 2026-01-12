@@ -43,6 +43,7 @@ export default class UpdateDtoGenerator extends GeneratorComponent {
     const columnList: string[] = [];
     tableInfo.columns.forEach((col) => {
       columnList.push(`
+  @IsOptional()
   ${toCamelCase(col.columnName)}: ${this.convertDataType(col)}`);
     });
     return columnList;
@@ -53,7 +54,7 @@ export default class UpdateDtoGenerator extends GeneratorComponent {
     const pascalName = toPascalCase(tableInfo.tableName);
     const camelName = toCamelCase(tableInfo.tableName);
 
-    const columnStr = this.getColumnCodes(tableInfo).join('');
+    const columnStr = this.getColumnCodes(tableInfo).join('\n');
     const templateParams: UpdateDtoTemplateParams = {
       kebabName,
       pascalName,

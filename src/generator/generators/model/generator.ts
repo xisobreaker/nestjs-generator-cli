@@ -97,19 +97,21 @@ export default class ModelGenerator extends GeneratorComponent {
   private getColumnCodes(tableInfo: TableInfo) {
     const columnList: string[] = [];
     tableInfo.columns.forEach((col) => {
-      if (!defaultColumn.find(c => c.name === col.columnName)) {
-        const constraint = tableInfo.foreignKeys.find(fk => {
-          return fk.keyColumnUsage.columnName === col.columnName;
-        });
-        if (constraint) {
-          columnList.push(`
+      if (defaultColumn.find(c => c.name === col.columnName)) {
+        return;
+      }
+
+      const constraint = tableInfo.foreignKeys.find(fk => {
+        return fk.keyColumnUsage.columnName === col.columnName;
+      });
+      if (constraint) {
+        columnList.push(`
   @ForeignKey(() => ${toPascalCase(constraint.referencedTableName)}Model)
   @Column({
     type: DataType.${this.getSequelizeType(col)},
     comment: '${col.columnComment}',
   })
   declare ${toCamelCase(col.columnName)}: ${this.convertDataType(col)};`);
-        }
       } else {
         columnList.push(`
   @Column({

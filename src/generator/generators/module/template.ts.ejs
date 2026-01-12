@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { <%= pascalName %>Controller } from './<%= kebabName %>.controller';
 import { <%= pascalName %>Service } from './<%= kebabName %>.service';
 import { <%= pascalName %>Resolver } from './<%= kebabName %>.resolver';
-
+<%- importStr %>
 @Module({
+  providers: [<%= pascalName %>Service, <%= pascalName %>Resolver<%= providerStr %>],
   controllers: [<%= pascalName %>Controller],
-  providers: [<%= pascalName %>Service, <%= pascalName %>Resolver],
 })
 export class <%= pascalName %>Module { }
