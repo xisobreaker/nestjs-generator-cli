@@ -46,13 +46,28 @@ export default class GqlSchemaGenerator extends GeneratorComponent {
 
   private getColumnCodes(tableInfo: TableInfo) {
     const columnList: string[] = [];
+    // 处理默认列
     defaultColumn.forEach((c) => {
-      columnList.push(`
+      if (c.primaryKey) {
+        columnList.push(`
+  # ${c.comment}
+  ${toCamelCase(c.name)}: ID`);
+      } else {
+        columnList.push(`
   # ${c.comment}
   ${toCamelCase(c.name)}: ${this.convertDataType(c.type)}`);
+      }
     })
     tableInfo.columns.forEach((col) => {
-      if (!defaultColumn.find(c => c.name === col.columnName)) {
+      if (defaultColumn.find(c => c.name === col.columnName)) {
+        return;
+      }
+
+      if (col.columnKey !== '') {
+        columnList.push(`
+  # ${col.columnComment}
+  ${toCamelCase(col.columnName)}: ID`);
+      } else {
         columnList.push(`
   # ${col.columnComment}
   ${toCamelCase(col.columnName)}: ${this.convertDataType(col.dataType)}`);
