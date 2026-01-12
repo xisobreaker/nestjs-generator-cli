@@ -41,9 +41,13 @@ export default class InterfaceGenerator extends GeneratorComponent {
     }
   }
 
-  private columnTemplate(col: Columns) {
-    return `
-  ${toCamelCase(col.columnName)}?: ${this.convertDataType(col)}`;
+  private getColumnCodes(tableInfo: TableInfo) {
+    const columnList: string[] = [];
+    tableInfo.columns.forEach((col) => {
+      columnList.push(`
+  ${toCamelCase(col.columnName)}: ${this.convertDataType(col)}`);
+    });
+    return columnList;
   }
 
   protected operator(tableInfo: TableInfo, configParam: GeneratorConfig): Record<string, any> {
@@ -51,7 +55,7 @@ export default class InterfaceGenerator extends GeneratorComponent {
     const pascalName = toPascalCase(tableInfo.tableName);
     const camelName = toCamelCase(tableInfo.tableName);
 
-    const columnStr = tableInfo.columns.map(col => this.columnTemplate(col)).join('');
+    const columnStr = this.getColumnCodes(tableInfo).join('');
     const templateParams: InterfaceTemplateParams = {
       kebabName,
       pascalName,

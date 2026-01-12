@@ -1,10 +1,9 @@
 import path from "path";
 import { toCamelCase, toKebabCase, toPascalCase } from "../../../common/case-utils";
-import { foreignKeyConstraint, referenceConstraint, TableInfo } from "../../table-query";
+import { TableInfo } from "../../table-query";
 import GeneratorComponent from "../generator-component";
 import { GeneratorConfig } from "../../configure";
 import { Columns } from "../../models/columns.model";
-import { ReferentialConstraint } from "../../models/referential-constraints.model";
 import { defaultColumn } from "../../../common/default-column";
 
 interface ModelTemplateParams {
@@ -72,30 +71,52 @@ export default class ModelGenerator extends GeneratorComponent {
     }
   }
 
-  private columnTemplate(col: Columns) {
-    if (defaultColumn.find(c => c.name === col.columnName)) {
-      return '';
-    }
-    return `
+  private getImportModels(tableInfo: TableInfo) {
+    const importModels: string[] = [];
+    tableInfo.foreignKeys.forEach(fk => {
+      if (fk.referencedTableName !== tableInfo.tableName) {
+        if (!importModels.includes(fk.referencedTableName)) {
+          importModels.push(toPascalCase(fk.referencedTableName));
+        }
+      }
+    });
+  }
+
+  private getColumnCodes(tableInfo: TableInfo) {
+    const columnList: string[] = [];
+    tableInfo.columns.forEach((col) => {
+      if (!defaultColumn.find(c => c.name === col.columnName)) {
+        columnList.push(`
   @Column({
     type: DataType.${this.getSequelizeType(col)},
     comment: '${col.columnComment}',
   })
-  declare ${toCamelCase(col.columnName)}: ${this.convertDataType(col)};`;
+  declare ${toCamelCase(col.columnName)}: ${this.convertDataType(col)};`);
+      }
+    });
+    return columnList;
   }
 
-  private foreignKeyTemplate(foreignKey: ReferentialConstraint) {
-    const constraint = foreignKeyConstraint(foreignKey);
-    return `
-  @BelongsTo(() => ${toPascalCase(constraint.tableName)}Model, '${constraint.referenceColName}')
-  ${constraint.fieldName}Obj: ${toPascalCase(constraint.tableName)}Model;`;
+  private getForeignKeyCodes(tableInfo: TableInfo) {
+    const foreignKeyList: string[] = [];
+    tableInfo.foreignKeys.forEach(rc => {
+      const fieldName = toCamelCase(rc.keyColumnUsage.columnName);
+      foreignKeyList.push(`
+  @BelongsTo(() => ${toPascalCase(rc.referencedTableName)}Model, '${fieldName}')
+  ${fieldName}Obj: ${toPascalCase(rc.referencedTableName)}Model;`);
+    });
+    return foreignKeyList;
   }
 
-  private referenceTemplate(reference: ReferentialConstraint) {
-    const constraint = referenceConstraint(reference);
-    return `
-  @HasMany(() => ${toPascalCase(constraint.tableName)}Model, '${constraint.tableColName}')
-  ${constraint.fieldName}: Array<${toPascalCase(constraint.tableName)}Model>;`;
+  private getReferenceCodes(tableInfo: TableInfo) {
+    const referencesList: string[] = [];
+    tableInfo.references.forEach(rc => {
+      const fieldName = `${toCamelCase(rc.keyColumnUsage.tableName)}${toPascalCase(rc.keyColumnUsage.columnName)}`;
+      referencesList.push(`
+  @HasMany(() => ${toPascalCase(rc.keyColumnUsage.tableName)}Model, '${rc.keyColumnUsage.columnName}')
+  ${fieldName}: Array<${toPascalCase(rc.keyColumnUsage.tableName)}Model>;`);
+    });
+    return referencesList;
   }
 
   protected operator(tableInfo: TableInfo, configParam: GeneratorConfig): Record<string, any> {
@@ -104,11 +125,11 @@ export default class ModelGenerator extends GeneratorComponent {
     const camelName = toCamelCase(tableInfo.tableName);
 
     const fieldList = [];
-    fieldList.push(...tableInfo.columns.map(col => this.columnTemplate(col)).filter(col => col !== ''));
-    fieldList.push(...tableInfo.foreignKeys.map(fk => this.foreignKeyTemplate(fk)).filter(fk => fk !== ''));
-    fieldList.push(...tableInfo.references.map(ref => this.referenceTemplate(ref)).filter(ref => ref !== ''));
-
+    fieldList.push(...this.getColumnCodes(tableInfo));
+    fieldList.push(...this.getForeignKeyCodes(tableInfo));
+    fieldList.push(...this.getReferenceCodes(tableInfo));
     const columnStr = fieldList.join('\n');
+
     const templateParams: ModelTemplateParams = {
       kebabName,
       pascalName,

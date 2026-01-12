@@ -1,10 +1,9 @@
 import path from "path";
-import { foreignKeyConstraint, referenceConstraint, TableInfo } from "../../../table-query";
+import { TableInfo } from "../../../table-query";
 import { toCamelCase, toKebabCase, toPascalCase } from "../../../../common/case-utils";
 import GeneratorComponent from "../../generator-component";
 import { GeneratorConfig } from "../../../configure";
-import { Columns } from "../../../models/columns.model";
-import { ReferentialConstraint } from "../../../models/referential-constraints.model";
+import { defaultColumn } from "../../../../common/default-column";
 
 interface GqlSchemaTemplateParams {
   kebabName: string;
@@ -20,8 +19,8 @@ export default class GqlSchemaGenerator extends GeneratorComponent {
     super('.graphql', path.join(__dirname, 'template.ts.ejs'));
   }
 
-  private convertDataType(col: Columns) {
-    switch (col.dataType) {
+  private convertDataType(type: string) {
+    switch (type) {
       case 'int':
       case 'bigint':
         return 'Int';
@@ -45,26 +44,41 @@ export default class GqlSchemaGenerator extends GeneratorComponent {
     }
   }
 
-  private columnTemplate(col: Columns) {
-    if (col.columnName === 'id') {
-      return `
-  ${toCamelCase(col.columnName)}: ID`;
-    }
-    return `
+  private getColumnCodes(tableInfo: TableInfo) {
+    const columnList: string[] = [];
+    defaultColumn.forEach((c) => {
+      columnList.push(`
+  # ${c.comment}
+  ${toCamelCase(c.name)}: ${this.convertDataType(c.type)}`);
+    })
+    tableInfo.columns.forEach((col) => {
+      if (!defaultColumn.find(c => c.name === col.columnName)) {
+        columnList.push(`
   # ${col.columnComment}
-  ${toCamelCase(col.columnName)}: ${this.convertDataType(col)}`;
+  ${toCamelCase(col.columnName)}: ${this.convertDataType(col.dataType)}`);
+      }
+    });
+    return columnList;
   }
 
-  private foreignKeyTemplate(foreignKey: ReferentialConstraint) {
-    const constraint = foreignKeyConstraint(foreignKey);
-    return `
-  ${constraint.fieldName}Obj: ${toPascalCase(constraint.tableName)}`;
+  private getForeignKeyCodes(tableInfo: TableInfo) {
+    const foreignKeyList: string[] = [];
+    tableInfo.foreignKeys.forEach(rc => {
+      const fieldName = toCamelCase(rc.keyColumnUsage.columnName);
+      foreignKeyList.push(`
+  ${fieldName}Obj: ${toPascalCase(rc.referencedTableName)}`);
+    });
+    return foreignKeyList;
   }
 
-  private referenceTemplate(reference: ReferentialConstraint) {
-    const constraint = referenceConstraint(reference);
-    return `
-  ${constraint.fieldName}: [${toPascalCase(constraint.tableName)}]`;
+  private getReferenceCodes(tableInfo: TableInfo) {
+    const referenceList: string[] = [];
+    tableInfo.references.forEach((rc) => {
+      const fieldName = `${toCamelCase(rc.keyColumnUsage.tableName)}${toPascalCase(rc.keyColumnUsage.columnName)}`;
+      referenceList.push(`
+  ${fieldName}: [${toPascalCase(rc.keyColumnUsage.tableName)}]`);
+    });
+    return referenceList;
   }
 
   protected operator(tableInfo: TableInfo, configParam: GeneratorConfig): Record<string, any> {
@@ -72,9 +86,9 @@ export default class GqlSchemaGenerator extends GeneratorComponent {
     const pascalName = toPascalCase(tableInfo.tableName);
     const camelName = toCamelCase(tableInfo.tableName);
 
-    const columnStr = tableInfo.columns.map((col) => this.columnTemplate(col)).join('');
-    const foreignKeyStr = tableInfo.foreignKeys.map((foreignKey) => this.foreignKeyTemplate(foreignKey)).join('');
-    const referenceStr = tableInfo.references.map((reference) => this.referenceTemplate(reference)).join('');
+    const columnStr = this.getColumnCodes(tableInfo).join('');
+    const foreignKeyStr = this.getForeignKeyCodes(tableInfo).join('');
+    const referenceStr = this.getReferenceCodes(tableInfo).join('');
     const templateParams: GqlSchemaTemplateParams = {
       kebabName,
       pascalName,
