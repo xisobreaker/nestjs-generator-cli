@@ -3,6 +3,7 @@ import { Columns, ColumnsModel } from "./models/columns.model";
 import _ from "lodash";
 import Bb from 'bluebird';
 import { KeyColumnUsageModel } from "./models/key-column-usage.model";
+import { toCamelCase, toPascalCase } from "../common/case-utils";
 
 export interface TableInfo {
   tableName: string;
@@ -12,6 +13,58 @@ export interface TableInfo {
   references: ReferentialConstraint[];
 };
 
+export interface ConstraintInfo {
+  /** 约束类型 */
+  type: 'foreignKeys' | 'references';
+  /** 重新生成的字段名称 */
+  fieldName: string;
+  /** 约束字段所属的表名称 */
+  tableName: string;
+  /** 约束字段所属的列名称 */
+  tableColName: string;
+  /** 引用约束字段所属的列名称 */
+  referenceColName: string;
+};
+
+/**
+ * @brief 查询表的外键约束信息
+ * 
+ * @param rc 外键约束信息
+ * @returns 外键约束信息
+ */
+export const foreignKeyConstraint = (rc: ReferentialConstraint): ConstraintInfo => {
+  return {
+    type: 'foreignKeys',
+    fieldName: toCamelCase(rc.keyColumnUsage.columnName),
+    tableName: rc.referencedTableName,
+    tableColName: rc.keyColumnUsage.referencedColumnName,
+    referenceColName: rc.keyColumnUsage.columnName,
+  }
+}
+
+/**
+ * @brief 查询表的引用约束信息
+ * 
+ * @param rc 引用约束信息
+ * @returns 
+ */
+export const referenceConstraint = (rc: ReferentialConstraint): ConstraintInfo => {
+  return {
+    type: 'references',
+    fieldName: `${toCamelCase(rc.keyColumnUsage.tableName)}${toPascalCase(rc.keyColumnUsage.columnName)}`,
+    tableName: rc.keyColumnUsage.tableName,
+    tableColName: rc.keyColumnUsage.columnName,
+    referenceColName: rc.keyColumnUsage.referencedColumnName,
+  }
+}
+
+/**
+ * @brief 查询表的列信息
+ * 
+ * @param dbName 数据库名称
+ * @param tableName 表名称
+ * @returns 
+ */
 const queryTableColumns = async (dbName: string, tableName: string) => {
   return ColumnsModel.findAll({
     where: {
@@ -56,6 +109,14 @@ const queryReferentialConstraints = async (dbName: string, tableName: string, ty
   });
 }
 
+/**
+ * @brief 查询表的详细信息
+ * 
+ * @param dbName 数据库名称
+ * @param tableName 表名称
+ * @param tableComment 表注释
+ * @returns 
+ */
 export const queryTableDetails = async (dbName: string, tableName: string, tableComment: string): Promise<TableInfo> => {
   return Bb.props({
     tableName,

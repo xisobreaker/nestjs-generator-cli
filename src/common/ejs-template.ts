@@ -1,3 +1,7 @@
+/**
+ * EJS模板引擎
+ */
+
 import { readFileSync } from "fs";
 import ejs from 'ejs';
 

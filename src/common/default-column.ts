@@ -7,4 +7,5 @@ export const defaultColumn = [
   { name: 'deleted_at', comment: '删除时间' },
   { name: 'deleted_id', comment: '删除人ID' },
   { name: 'remarks', comment: '备注' },
+  { name: 'order_no', comment: '排序' },
 ];

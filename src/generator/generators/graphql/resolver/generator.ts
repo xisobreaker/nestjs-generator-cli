@@ -3,6 +3,7 @@ import { TableInfo } from "../../../table-query";
 import { toCamelCase, toKebabCase, toPascalCase } from "../../../../common/case-utils";
 import GeneratorComponent from "../../generator-component";
 import { GeneratorConfig } from "../../../configure";
+import { Columns } from "../../../models/columns.model";
 
 interface GqlResolverTemplateParams {
   kebabName: string;

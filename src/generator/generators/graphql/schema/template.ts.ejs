@@ -1,8 +1,7 @@
-type <%= pascalName %> = {
-  id: ID
+type <%= pascalName %> {<%= columnStr %><%= foreignKeyStr %><%= referenceStr %>
 }
 
-type <%= pascalName %>List = {
+type <%= pascalName %>List {
   total: Int!
   list: [<%= pascalName %>]
 }
@@ -21,6 +20,5 @@ extend type Mutation {
   <%= camelName %>DestroyById(id: ID!): Boolean
 }
 
-input <%= pascalName %>Input {
-  id: ID
+input <%= pascalName %>Input {<%= columnStr %>
 }

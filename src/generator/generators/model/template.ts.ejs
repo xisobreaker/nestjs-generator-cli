@@ -1,9 +1,9 @@
-import { Model, Table } from 'sequelize-typescript';
+import { BelongsTo, Column, DataType, ForeignKey, HasMany, Table } from "sequelize-typescript";
+import { BaseModel } from "src/common/base/base.model";
 
 @Table({
   tableName: '<%= tableName %>',
   comment: '<%= tableComment %>',
 })
-export class <%= pascalName %>Model extends Model {
-
+export class <%= pascalName %>Model extends BaseModel<<%= pascalName %>Model> {<%- columnStr %>
 }
