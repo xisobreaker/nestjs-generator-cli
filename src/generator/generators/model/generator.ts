@@ -12,6 +12,7 @@ interface ModelTemplateParams {
   camelName: string;
   tableName: string;
   tableComment: string;
+  importStr: string;
   columnStr: string;
 }
 
@@ -71,14 +72,25 @@ export default class ModelGenerator extends GeneratorComponent {
     }
   }
 
-  private getImportModels(tableInfo: TableInfo) {
+  private getImportModelCodes(tableInfo: TableInfo) {
     const importModels: string[] = [];
     tableInfo.foreignKeys.forEach(fk => {
       if (fk.referencedTableName !== tableInfo.tableName) {
         if (!importModels.includes(fk.referencedTableName)) {
-          importModels.push(toPascalCase(fk.referencedTableName));
+          importModels.push(fk.referencedTableName);
         }
       }
+    });
+    tableInfo.references.forEach(ref => {
+      if (ref.tableName !== tableInfo.tableName) {
+        if (!importModels.includes(ref.tableName)) {
+          importModels.push(ref.tableName);
+        }
+      }
+    })
+
+    return importModels.map((m) => {
+      return `import { ${toPascalCase(m)}Model } from './${toKebabCase(m)}.model';`;
     });
   }
 
@@ -86,6 +98,19 @@ export default class ModelGenerator extends GeneratorComponent {
     const columnList: string[] = [];
     tableInfo.columns.forEach((col) => {
       if (!defaultColumn.find(c => c.name === col.columnName)) {
+        const constraint = tableInfo.foreignKeys.find(fk => {
+          return fk.keyColumnUsage.columnName === col.columnName;
+        });
+        if (constraint) {
+          columnList.push(`
+  @ForeignKey(() => ${toPascalCase(constraint.referencedTableName)}Model)
+  @Column({
+    type: DataType.${this.getSequelizeType(col)},
+    comment: '${col.columnComment}',
+  })
+  declare ${toCamelCase(col.columnName)}: ${this.convertDataType(col)};`);
+        }
+      } else {
         columnList.push(`
   @Column({
     type: DataType.${this.getSequelizeType(col)},
@@ -101,9 +126,15 @@ export default class ModelGenerator extends GeneratorComponent {
     const foreignKeyList: string[] = [];
     tableInfo.foreignKeys.forEach(rc => {
       const fieldName = toCamelCase(rc.keyColumnUsage.columnName);
-      foreignKeyList.push(`
+      if (rc.keyColumnUsage.referencedColumnName === 'id') {
+        foreignKeyList.push(`
   @BelongsTo(() => ${toPascalCase(rc.referencedTableName)}Model, '${fieldName}')
   ${fieldName}Obj: ${toPascalCase(rc.referencedTableName)}Model;`);
+      } else {
+        foreignKeyList.push(`
+  @BelongsTo(() => ${toPascalCase(rc.referencedTableName)}Model, { foreignKey: '${fieldName}', sourceKey: '${rc.keyColumnUsage.referencedColumnName}' })
+  ${fieldName}Obj: ${toPascalCase(rc.referencedTableName)}Model;`);
+      }
     });
     return foreignKeyList;
   }
@@ -112,9 +143,15 @@ export default class ModelGenerator extends GeneratorComponent {
     const referencesList: string[] = [];
     tableInfo.references.forEach(rc => {
       const fieldName = `${toCamelCase(rc.keyColumnUsage.tableName)}${toPascalCase(rc.keyColumnUsage.columnName)}`;
-      referencesList.push(`
-  @HasMany(() => ${toPascalCase(rc.keyColumnUsage.tableName)}Model, '${rc.keyColumnUsage.columnName}')
+      if (rc.keyColumnUsage.referencedColumnName === 'id') {
+        referencesList.push(`
+  @HasMany(() => ${toPascalCase(rc.keyColumnUsage.tableName)}Model, '${toCamelCase(rc.keyColumnUsage.columnName)}')
   ${fieldName}: Array<${toPascalCase(rc.keyColumnUsage.tableName)}Model>;`);
+      } else {
+        referencesList.push(`
+  @HasMany(() => ${toPascalCase(rc.keyColumnUsage.tableName)}Model, { foreignKey: '${toCamelCase(rc.keyColumnUsage.columnName)}', sourceKey: '${toCamelCase(rc.keyColumnUsage.referencedColumnName)}' })
+  ${fieldName}: Array<${toPascalCase(rc.keyColumnUsage.tableName)}Model>;`);
+      }
     });
     return referencesList;
   }
@@ -123,6 +160,14 @@ export default class ModelGenerator extends GeneratorComponent {
     const kebabName = toKebabCase(tableInfo.tableName);
     const pascalName = toPascalCase(tableInfo.tableName);
     const camelName = toCamelCase(tableInfo.tableName);
+
+    // 导入模型
+    const importList: string[] = [];
+    importList.push(...this.getImportModelCodes(tableInfo));
+    let importStr = importList.join('\n');
+    if (importStr !== '') {
+      importStr = importStr.concat('\n');
+    }
 
     const fieldList = [];
     fieldList.push(...this.getColumnCodes(tableInfo));
@@ -136,6 +181,7 @@ export default class ModelGenerator extends GeneratorComponent {
       camelName,
       tableName: tableInfo.tableName,
       tableComment: tableInfo.tableComment,
+      importStr,
       columnStr,
     };
     return templateParams;

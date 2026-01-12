@@ -1,6 +1,6 @@
-import { BelongsTo, Column, DataType, ForeignKey, HasMany, Table } from "sequelize-typescript";
+import { Table, Column, DataType, ForeignKey, BelongsTo, HasMany } from "sequelize-typescript";
 import { BaseModel } from "src/common/base/base.model";
-
+<%- importStr %>
 @Table({
   tableName: '<%= tableName %>',
   comment: '<%= tableComment %>',
