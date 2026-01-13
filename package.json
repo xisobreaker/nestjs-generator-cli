@@ -1,5 +1,5 @@
 {
-  "name": "auto-generator-cli",
+  "name": "@shaojx/codegen-cli",
   "version": "0.1.0",
   "description": "",
   "main": "dist/index.js",
@@ -26,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xisobreaker/auto-generator-cli.git"
+    "url": "git+https://github.com/xisobreaker/code-generator-cli.git"
   },
   "config": {
     "commitizen": {
@@ -38,9 +38,9 @@
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/xisobreaker/auto-generator-cli/issues"
+    "url": "https://github.com/xisobreaker/code-generator-cli/issues"
   },
-  "homepage": "https://github.com/xisobreaker/auto-generator-cli#readme",
+  "homepage": "https://github.com/xisobreaker/code-generator-cli#readme",
   "devDependencies": {
     "@commitlint/cli": "^20.3.1",
     "@commitlint/config-conventional": "^20.3.1",
