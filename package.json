@@ -2,7 +2,13 @@
   "name": "auto-generator-cli",
   "version": "0.1.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "bin": {
+    "auto-generator-cli": "dist/index.js"
+  },
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "build": "tsc && copyfiles -u 1 src/**/*.ejs dist/",
     "debug": "ts-node-dev src/index.ts",

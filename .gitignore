@@ -6,5 +6,6 @@ dist
 database
 
 # project
+.npmrc
 .generator-cli.json
 app/src/
