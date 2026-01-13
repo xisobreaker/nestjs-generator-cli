@@ -10,7 +10,7 @@ export class <%= pascalName %>Resolver {
   ) { }
 
   @Query('<%= camelName %>')
-  async <%= camelName %>(@Args('id') id: string): Promise<any> {
+  async <%= camelName %>(@Args('id') id: number): Promise<any> {
     return this.<%= camelName %>Service.findByPk(id);
   }
 
@@ -48,7 +48,7 @@ export class <%= pascalName %>Resolver {
   }
 
   @Mutation('<%= camelName %>DestroyById')
-  async <%= camelName %>DestroyById(@Args('id') id: string) {
+  async <%= camelName %>DestroyById(@Args('id') id: number) {
     return this.<%= camelName %>Service.remove(id);
   }
 
